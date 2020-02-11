@@ -58,16 +58,19 @@ namespace TaxStore.Usecase
 
             try
             {
-                municipality.SchedulePeriodTax(request.StartDate, request.EndDate, request.Tax);
+                return AddTaxSchedule(request, municipality);
             }
             catch (InvalidSchedulingException e)
             {
                 return Response.NotOK(e.Message);
             }
+        }
 
+        private Response AddTaxSchedule(Request request, Municipality municipality)
+        {
+            municipality.SchedulePeriodTax(request.StartDate, request.EndDate, request.Tax);
             storage.SaveMunicipality(municipality.ToData());
             return Response.OK();
         }
-
     }
 }

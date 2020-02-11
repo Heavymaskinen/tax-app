@@ -27,11 +27,7 @@ namespace TaxApplication.Controllers
         [HttpPost]
         public ActionResult<bool> AddSchedule([FromBody] ScheduleRequest request)
         {
-            var startDate = request.StartDate;
-            var endDate = request.EndDate;
-            var tax = request.Tax;
-
-            if (startDate == null || endDate == null)
+            if (request.StartDate == null || request.EndDate == null)
             {
                 logger.LogDebug("Received request with empty date(s)");
                 return new ActionResult<bool>(false);
@@ -40,10 +36,10 @@ namespace TaxApplication.Controllers
             var usecase = new ScheduleTax(ApiConfiguration.Repository);
             var response = usecase.Schedule(new ScheduleTax.Request()
             {
-                StartDate = startDate,
-                EndDate = endDate,
+                StartDate = request.StartDate,
+                EndDate = request.EndDate,
                 Municipality = request.Municipality,
-                Tax = tax
+                Tax = request.Tax
             });
 
             return new ActionResult<bool>(response.StatusOk);
