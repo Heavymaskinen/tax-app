@@ -10,6 +10,9 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using TaxDatabase;
+using TaxStore.Dto;
+using TaxStore.Model;
 
 namespace TaxApplication
 {
@@ -26,6 +29,22 @@ namespace TaxApplication
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
+            EnsureTestData(new DatabaseRepository());
+            DatabaseRepository storage = new DatabaseRepository();
+            
+
+            ApiConfiguration.Repository = storage;
+        }
+
+        private static void EnsureTestData(DatabaseRepository storage)
+        {
+            storage.Database.EnsureCreated();
+            if (storage.Municipalities.Find("Odense") == null)
+            {
+                MunicipalityData entity = new MunicipalityData() { MunicipalityID = "Odense" };
+                storage.Municipalities.Add(entity);
+                storage.SaveChanges();
+            }
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

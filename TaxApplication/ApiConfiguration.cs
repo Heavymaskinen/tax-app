@@ -1,10 +1,10 @@
 ﻿using System;
+using TaxStore.External;
+
 namespace TaxApplication
 {
     public class ApiConfiguration
     {
-        public ApiConfiguration()
-        {
-        }
+        public static IMunicipalityRepository Repository { get; set; }
     }
 }
