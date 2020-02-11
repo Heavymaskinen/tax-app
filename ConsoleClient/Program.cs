@@ -20,39 +20,7 @@ namespace ConsoleClient
 
                 try
                 {
-                    var command = parts[0].ToLower();
-                    if (command.Equals("get"))
-                    {
-                        HandleGet(client, parts);
-                    }
-                    else if (command.Equals("schedule"))
-                    {
-                        var municipality = parts[1];
-
-                        var tax = parts[2];
-                        string startDate;
-                        if (parts.Length < 4)
-                        {
-                            startDate = "2020-01-01";
-                        }
-                        else
-                        {
-                            startDate = parts[3];
-                        }
-
-                        string endDate;
-                        if (parts.Length < 5)
-                        {
-                            endDate = "2020-12-31";
-                        }
-                        else
-                        {
-                            endDate = parts[3];
-                        }
-
-                        var response = client.ScheduleTax(municipality, double.Parse(tax), startDate, endDate);
-                        Console.WriteLine("Responded: " + response);
-                    }
+                    ProcessCommand(client, parts);
                 }
                 catch (Exception e)
                 {
@@ -63,6 +31,48 @@ namespace ConsoleClient
                 input = Console.ReadLine();
 
             }
+        }
+
+        private static void ProcessCommand(ApiClient client, string[] parts)
+        {
+            var command = parts[0].ToLower();
+            if (command.Equals("get"))
+            {
+                HandleGet(client, parts);
+            }
+            else if (command.Equals("schedule"))
+            {
+                HandleSchedule(client, parts);
+            }
+        }
+
+        private static void HandleSchedule(ApiClient client, string[] parts)
+        {
+            var municipality = parts[1];
+
+            var tax = parts[2];
+            string startDate;
+            if (parts.Length < 4)
+            {
+                startDate = "2020-01-01";
+            }
+            else
+            {
+                startDate = parts[3];
+            }
+
+            string endDate;
+            if (parts.Length < 5)
+            {
+                endDate = "2020-12-31";
+            }
+            else
+            {
+                endDate = parts[3];
+            }
+
+            var response = client.ScheduleTax(municipality, double.Parse(tax), startDate, endDate);
+            Console.WriteLine("Responded: " + response);
         }
 
         private static void HandleGet(ApiClient client, string[] parts)
